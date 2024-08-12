@@ -1,5 +1,5 @@
 import unittest
-from typing import Optional
+from typing import Any, Optional
 
 from tree_node import TreeNode
 
@@ -15,6 +15,13 @@ class BinarySearchTree:
     def insert(self, node: TreeNode, subtree_root: Optional[TreeNode] = None) -> None:
         """
         If root node is None the new node will be root
+
+        Complexity
+        Time: O(n) in the worst case for an unbalanced tree,
+                O(log n) in the best/average case for a balanced tree.
+        Space: O(h) where h is the height of the tree.
+                In the worst case, this is O(n), and in the best case (balanced tree),
+                it is O(log n).
         """
         if node is None:
             return
@@ -36,6 +43,46 @@ class BinarySearchTree:
                 subtree_root.right = node
             else:
                 self.insert(node, subtree_root.right)
+
+    def find_node_by_value(self, value: Any) -> Optional[TreeNode]:
+        """
+        Find the first TreeNode with the value matching the value argument
+        """
+        if value is None or self._root is None:
+            return
+
+        working_node = self._root
+        while working_node is not None:
+            if working_node.value is None or working_node.value == value:
+                break
+            elif working_node.value:
+                if working_node.value <= value:
+                    working_node = working_node.left
+                else:
+                    working_node = working_node.right
+
+        return working_node
+
+    def delete(self, node: TreeNode) -> None:
+        pass
+
+
+class TestBinarySearchTreeFind(unittest.TestCase):
+
+    def test_value_is_None_None_returned(self):
+        bst = BinarySearchTree(TreeNode(64))
+        self.assertEqual(bst.find_node_by_value(None), None)
+
+    def test_empty_tree_returns_None(self):
+        bst = BinarySearchTree()
+        self.assertEqual(bst.find_node_by_value(64), None)
+
+    def test_root_node_contains_value(self):
+        root = TreeNode(64)
+        bst = BinarySearchTree(root)
+        search_result = bst.find_node_by_value(64)
+        self.assertIsNotNone(search_result)
+        self.assertEqual(search_result.value, 64)
 
 
 class TestBinarySearchTreeInsert(unittest.TestCase):
