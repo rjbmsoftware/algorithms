@@ -55,7 +55,8 @@ class BinarySearchTree:
         while working_node is not None:
             if working_node.value is None or working_node.value == value:
                 break
-            elif working_node.value:
+
+            if working_node.value:
                 if working_node.value <= value:
                     working_node = working_node.left
                 else:
@@ -78,11 +79,22 @@ class TestBinarySearchTreeFind(unittest.TestCase):
         self.assertEqual(bst.find_node_by_value(64), None)
 
     def test_root_node_contains_value(self):
-        root = TreeNode(64)
+        search_value = 64
+        root = TreeNode(value=search_value)
         bst = BinarySearchTree(root)
-        search_result = bst.find_node_by_value(64)
+        search_result = bst.find_node_by_value(search_value)
         self.assertIsNotNone(search_result)
-        self.assertEqual(search_result.value, 64)
+        self.assertEqual(search_result.value, search_value)
+
+    def test_node_found_left_left(self): # fails
+        root = TreeNode(value=64)
+        bst = BinarySearchTree(root)
+        bst.insert(TreeNode(value=32))
+        bst.insert(TreeNode(value=16))
+        search_result = bst.find_node_by_value(16)
+        self.assertIsNotNone(search_result)
+        self.assertEqual(search_result.value, 16)
+
 
 
 class TestBinarySearchTreeInsert(unittest.TestCase):
