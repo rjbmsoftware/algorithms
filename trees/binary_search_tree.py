@@ -47,6 +47,13 @@ class BinarySearchTree:
     def find_node_by_value(self, value: Any) -> Optional[TreeNode]:
         """
         Find the first TreeNode with the value matching the value argument
+
+        Complexity
+        Time: O(n) in the worst case for an unbalanced tree,
+              O(log n) for a balanced tree
+
+        Space: O(1) the implementation is iterative and does not depend
+               on previous values
         """
         if value is None or self._root is None:
             return
@@ -64,17 +71,39 @@ class BinarySearchTree:
 
         return working_node
 
-    def delete(self, node: TreeNode) -> None:
-        pass
+    def delete_by_value(self, value: Any) -> None:
+        """
+        Deletes the first found node with value
+        """
+        found_node = self.find_node_by_value(value)
+        if found_node is None:
+            return
+        # TODO: write find parent of find node by value
+
+
+class TestBinarySearchTreeDelete(unittest.TestCase):
+
+    def test_value_not_in_tree_no_errors_raised(self):
+        bst = BinarySearchTree(TreeNode(value=64))
+        bst.delete_by_value(32)
+        root = bst.find_node_by_value(64)
+        self.assertIsNotNone(root)
+
+    def test_remove_childless_node(self):
+        root = TreeNode(value=64)
+        bst = BinarySearchTree(root)
+        bst.insert(TreeNode(value=32))
+        bst.delete_by_value(32)
+        self.assertIsNone(root.left)
 
 
 class TestBinarySearchTreeFind(unittest.TestCase):
 
-    def test_value_is_None_None_returned(self):
+    def test_value_is_none_none_returned(self):
         bst = BinarySearchTree(TreeNode(64))
         self.assertEqual(bst.find_node_by_value(None), None)
 
-    def test_empty_tree_returns_None(self):
+    def test_empty_tree_returns_none(self):
         bst = BinarySearchTree()
         self.assertEqual(bst.find_node_by_value(64), None)
 
@@ -105,7 +134,6 @@ class TestBinarySearchTreeFind(unittest.TestCase):
         search_result = bst.find_node_by_value(search_value)
         self.assertIsNotNone(search_result)
         self.assertEqual(search_result.value, search_value)
-
 
 
 class TestBinarySearchTreeInsert(unittest.TestCase):
