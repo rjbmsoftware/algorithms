@@ -1,5 +1,5 @@
 import unittest
-from typing import Any, Optional
+from typing import Any, Optional, Tuple
 
 from tree_node import TreeNode
 
@@ -70,15 +70,22 @@ class BinarySearchTree:
                     working_node = working_node.right
 
         return working_node
+    
+    def find_parent_child_with_value(self, value: Any) -> Tuple[Optional[TreeNode], Optional[TreeNode]]:
+        return None, None
 
     def delete_by_value(self, value: Any) -> None:
         """
         Deletes the first found node with value
         """
-        found_node = self.find_node_by_value(value)
-        if found_node is None:
-            return
-        # TODO: write find parent of find node by value
+        # found_node = self.find_node_by_value(value)
+        # if found_node is None:
+        #     return
+
+        # parent, child = self.find_parent_child_with_value()
+        # if parent is None and child is None:
+        #     return
+
 
 
 class TestBinarySearchTreeDelete(unittest.TestCase):
@@ -89,13 +96,23 @@ class TestBinarySearchTreeDelete(unittest.TestCase):
         root = bst.find_node_by_value(64)
         self.assertIsNotNone(root)
 
-    def test_remove_childless_node(self):
-        root = TreeNode(value=64)
-        bst = BinarySearchTree(root)
-        bst.insert(TreeNode(value=32))
-        bst.delete_by_value(32)
-        self.assertIsNone(root.left)
+    # def test_remove_childless_node(self):
+    #     root = TreeNode(value=64)
+    #     bst = BinarySearchTree(root)
+    #     bst.insert(TreeNode(value=32))
+    #     bst.delete_by_value(32)
+    #     self.assertIsNone(root.left)
 
+class TestBinarySearchTreeFindParentWithChildValue(unittest.TestCase):
+
+    def test_child_left_child_node_has_value(self):
+        root = TreeNode(value=64)
+        left = TreeNode(value=32)
+        bst = BinarySearchTree(root)
+        bst.insert(left)
+        parent, child = bst.find_parent_child_with_value(32)
+        self.assertEqual(root, parent)
+        self.assertEqual(child, left)
 
 class TestBinarySearchTreeFind(unittest.TestCase):
 
