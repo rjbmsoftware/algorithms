@@ -70,9 +70,27 @@ class BinarySearchTree:
                     working_node = working_node.right
 
         return working_node
-    
-    def find_parent_child_with_value(self, value: Any) -> Tuple[Optional[TreeNode], Optional[TreeNode]]:
-        return None, None
+
+    def find_parent_child_with_value(self, subtree_root: TreeNode, search_value: Any) -> Tuple[Optional[TreeNode], Optional[TreeNode]]:
+        """
+        Returns two variables parent and child TreeNodes
+        """
+        if subtree_root.value is None:
+            raise ValueError("subtree root cannot have a None value")
+
+        if search_value <= subtree_root.value:
+            child = subtree_root.left
+        else:
+            child = subtree_root.right
+
+        if child is None:
+            return subtree_root, child
+
+        if child.value is not None and child.value == search_value:
+            return subtree_root, child
+
+        return self.find_parent_child_with_value(child, search_value)
+
 
     def delete_by_value(self, value: Any) -> None:
         """
@@ -85,7 +103,6 @@ class BinarySearchTree:
         # parent, child = self.find_parent_child_with_value()
         # if parent is None and child is None:
         #     return
-
 
 
 class TestBinarySearchTreeDelete(unittest.TestCase):
@@ -103,16 +120,29 @@ class TestBinarySearchTreeDelete(unittest.TestCase):
     #     bst.delete_by_value(32)
     #     self.assertIsNone(root.left)
 
+
 class TestBinarySearchTreeFindParentWithChildValue(unittest.TestCase):
 
     def test_child_left_child_node_has_value(self):
+        search_value = 32
         root = TreeNode(value=64)
-        left = TreeNode(value=32)
+        left = TreeNode(value=search_value)
         bst = BinarySearchTree(root)
         bst.insert(left)
-        parent, child = bst.find_parent_child_with_value(32)
+        parent, child = bst.find_parent_child_with_value(root, search_value)
         self.assertEqual(root, parent)
         self.assertEqual(child, left)
+
+    def test_child_right_child_node_has_value(self):
+        search_value = 128
+        root = TreeNode(value=64)
+        right = TreeNode(value=search_value)
+        bst = BinarySearchTree(root)
+        bst.insert(right)
+        parent, child = bst.find_parent_child_with_value(root, search_value)
+        self.assertEqual(root, parent)
+        self.assertEqual(child, right)
+
 
 class TestBinarySearchTreeFind(unittest.TestCase):
 
