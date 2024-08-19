@@ -91,18 +91,38 @@ class BinarySearchTree:
 
         return self.find_parent_child_with_value(child, search_value)
 
-
     def delete_by_value(self, value: Any) -> None:
         """
         Deletes the first found node with value
         """
-        # found_node = self.find_node_by_value(value)
-        # if found_node is None:
-        #     return
+        parent_node, child_node = self.find_parent_child_with_value(
+            self._root, value)
+        if parent_node is None or child_node is None:
+            return
 
-        # parent, child = self.find_parent_child_with_value()
-        # if parent is None and child is None:
-        #     return
+        # if both child children are None remove the node
+        if child_node.left is None and child_node.right is None:
+            if parent_node.left == child_node:
+                parent_node.left = None
+            else:
+                parent_node.right = None
+
+        if child_node.left is not None and child_node.right is not None:
+            raise NotImplementedError(
+                'not implement removal with both children yet!')
+
+        # if child has a single child remove the node assigning
+        # the parent child the correct grand child
+        if child_node.left is None:
+            new_child = child_node.right
+        else:
+            new_child = child_node.left
+
+        if parent_node.left == child_node:
+            parent_node.left = new_child
+        else:
+            parent_node.right = new_child
+
 
 
 class TestBinarySearchTreeDelete(unittest.TestCase):
@@ -113,12 +133,37 @@ class TestBinarySearchTreeDelete(unittest.TestCase):
         root = bst.find_node_by_value(64)
         self.assertIsNotNone(root)
 
-    # def test_remove_childless_node(self):
-    #     root = TreeNode(value=64)
-    #     bst = BinarySearchTree(root)
-    #     bst.insert(TreeNode(value=32))
-    #     bst.delete_by_value(32)
-    #     self.assertIsNone(root.left)
+    def test_remove_childless_left_node(self):
+        root = TreeNode(value=64)
+        bst = BinarySearchTree(root)
+        bst.insert(TreeNode(value=32))
+        bst.delete_by_value(32)
+        self.assertIsNone(root.left)
+
+    def test_remove_childless_right_node(self):
+        root = TreeNode(value=64)
+        bst = BinarySearchTree(root)
+        bst.insert(TreeNode(value=128))
+        bst.delete_by_value(128)
+        self.assertIsNone(root.right)
+
+    def test_remove_left_node_with_left_child(self):
+        root = TreeNode(value=64)
+        bst = BinarySearchTree(root)
+        delete_value = 32
+        bst.insert(TreeNode(value=delete_value))
+        bst.insert(TreeNode(value=16))
+        bst.delete_by_value(delete_value)
+        self.assertEqual(root.left.value, 16)
+
+    def test_remove_left_node_with_right_child(self):
+        root = TreeNode(value=64)
+        bst = BinarySearchTree(root)
+        delete_value = 32
+        bst.insert(TreeNode(value=delete_value))
+        bst.insert(TreeNode(value=48))
+        bst.delete_by_value(delete_value)
+        self.assertEqual(root.left.value, 48)
 
 
 class TestBinarySearchTreeFindParentWithChildValue(unittest.TestCase):
@@ -142,6 +187,18 @@ class TestBinarySearchTreeFindParentWithChildValue(unittest.TestCase):
         parent, child = bst.find_parent_child_with_value(root, search_value)
         self.assertEqual(root, parent)
         self.assertEqual(child, right)
+
+    def test_child_node_has_value_where_parent_is_not_root(self):
+        search_value = 48
+        root = TreeNode(value=64)
+        root_left_child = TreeNode(value=32)
+        root_left_right_child = TreeNode(value=search_value)
+        bst = BinarySearchTree(root)
+        bst.insert(root_left_child)
+        bst.insert(root_left_right_child)
+        parent, child = bst.find_parent_child_with_value(root, search_value)
+        self.assertEqual(parent, root_left_child)
+        self.assertEqual(child, root_left_right_child)
 
 
 class TestBinarySearchTreeFind(unittest.TestCase):
