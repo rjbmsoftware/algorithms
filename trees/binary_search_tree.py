@@ -108,8 +108,19 @@ class BinarySearchTree:
                 parent_node.right = None
 
         if child_node.left is not None and child_node.right is not None:
-            raise NotImplementedError(
-                'not implement removal with both children yet!')
+            # find the min value in the right tree
+            min_parent = child_node
+            min_child = child_node.left
+            while min_child.left is not None:
+                min_parent = min_child
+                min_child = min_parent.left
+
+            # remove the reference to the min child node
+            min_parent.left = None
+
+            # replace the child value min child value
+            child_node.value = min_child.value
+            return
 
         # if child has a single child remove the node assigning
         # the parent child the correct grand child
@@ -122,7 +133,6 @@ class BinarySearchTree:
             parent_node.left = new_child
         else:
             parent_node.right = new_child
-
 
 
 class TestBinarySearchTreeDelete(unittest.TestCase):
@@ -164,6 +174,33 @@ class TestBinarySearchTreeDelete(unittest.TestCase):
         bst.insert(TreeNode(value=48))
         bst.delete_by_value(delete_value)
         self.assertEqual(root.left.value, 48)
+
+    def test_remove_node_with_two_children(self):
+        """
+                    100
+                        \
+                        200
+                        / \
+                    150    300
+                           / \
+                        250   400
+                        /
+                     225
+        """
+        root = TreeNode(value=100)
+        bst = BinarySearchTree(root)
+        bst.insert(TreeNode(value=200))
+        delete_value = 300
+        bst.insert(TreeNode(value=delete_value))
+        bst.insert(TreeNode(value=400))
+        bst.insert(TreeNode(value=150))
+        bst.insert(TreeNode(value=250))
+        bst.insert(TreeNode(value=225))
+
+        bst.delete_by_value(delete_value)
+
+        self.assertEqual(root.right.right.value, 225)
+        self.assertIsNone(root.right.right.left.left)
 
 
 class TestBinarySearchTreeFindParentWithChildValue(unittest.TestCase):
