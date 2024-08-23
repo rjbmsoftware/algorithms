@@ -91,48 +91,59 @@ class BinarySearchTree:
 
         return self.find_parent_child_with_value(child, search_value)
 
+
     def delete_by_value(self, value: Any) -> None:
         """
         Deletes the first found node with value
+
+        Complexity
+        Time:
+            O(n) where n is the depth of the tree as we need to find the
+            node first then find the minimum in the right subtree to swap
+            the values over and remove the old minimum leaf node. For a
+            balanced tree the best case this would be O(log n)
+        Space:
+            O(1) traversing the tree does not use more memory as it is an
+            iterative solution
         """
         parent_node, child_node = self.find_parent_child_with_value(
             self._root, value)
         if parent_node is None or child_node is None:
             return
 
-        # if both child children are None remove the node
-        if child_node.left is None and child_node.right is None:
-            if parent_node.left == child_node:
-                parent_node.left = None
+        child_has_children = child_node.left is not None or child_node.right is not None
+        if child_has_children:
+
+            child_has_two_children = child_node.left is not None and child_node.right is not None
+            if child_has_two_children:
+                # find the min value in the right tree
+                min_parent = child_node
+                min_child = child_node.left
+                while min_child.left is not None:
+                    min_parent = min_child
+                    min_child = min_parent.left
+
+                # remove the reference to the min child node
+                min_parent.left = None
+
+                # replace the child value min child value
+                child_node.value = min_child.value
             else:
-                parent_node.right = None
+                if child_node.left is None:
+                    new_child = child_node.right
+                else:
+                    new_child = child_node.left
 
-        if child_node.left is not None and child_node.right is not None:
-            # find the min value in the right tree
-            min_parent = child_node
-            min_child = child_node.left
-            while min_child.left is not None:
-                min_parent = min_child
-                min_child = min_parent.left
-
-            # remove the reference to the min child node
-            min_parent.left = None
-
-            # replace the child value min child value
-            child_node.value = min_child.value
-            return
-
-        # if child has a single child remove the node assigning
-        # the parent child the correct grand child
-        if child_node.left is None:
-            new_child = child_node.right
+                self.replace_child_with(parent_node, child_node, new_child)
         else:
-            new_child = child_node.left
+            self.replace_child_with(parent_node, child_node, None)
 
-        if parent_node.left == child_node:
-            parent_node.left = new_child
+
+    def replace_child_with(self, parent: TreeNode, child: TreeNode, replacement: Optional[TreeNode]) -> None:
+        if parent.left == child:
+            parent.left = replacement
         else:
-            parent_node.right = new_child
+            parent.right = replacement
 
 
 class TestBinarySearchTreeDelete(unittest.TestCase):
@@ -201,6 +212,9 @@ class TestBinarySearchTreeDelete(unittest.TestCase):
 
         self.assertEqual(root.right.right.value, 225)
         self.assertIsNone(root.right.right.left.left)
+
+    def test_remove_node_with_two_children_min_node_has_right_child(self):
+        raise NotImplementedError()
 
 
 class TestBinarySearchTreeFindParentWithChildValue(unittest.TestCase):
