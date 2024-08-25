@@ -143,6 +143,17 @@ class BinarySearchTree:
             parent.right = replacement
 
 
+class TestBinarySearchTreeInOrderTraversalValues(unittest.TestCase):
+
+    def test_empty_tree_empty_list(self):
+        # proposed solution
+        # recursive function
+        # add left subtree to list output
+        # add current node to list output
+        # add right subtree to list output
+        raise NotImplementedError()
+
+
 class TestBinarySearchTreeDelete(unittest.TestCase):
 
     def test_value_not_in_tree_no_errors_raised(self):
