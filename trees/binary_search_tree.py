@@ -91,7 +91,6 @@ class BinarySearchTree:
 
         return self.find_parent_child_with_value(child, search_value)
 
-
     def delete_by_value(self, value: Any) -> None:
         """
         Deletes the first found node with value
@@ -123,10 +122,9 @@ class BinarySearchTree:
                     min_parent = min_child
                     min_child = min_parent.left
 
-                # remove the reference to the min child node
-                min_parent.left = None
+                # remove the reference to the min child node, min child can have right child
+                min_parent.left = min_child.right
 
-                # replace the child value min child value
                 child_node.value = min_child.value
             else:
                 if child_node.left is None:
@@ -137,7 +135,6 @@ class BinarySearchTree:
                 self.replace_child_with(parent_node, child_node, new_child)
         else:
             self.replace_child_with(parent_node, child_node, None)
-
 
     def replace_child_with(self, parent: TreeNode, child: TreeNode, replacement: Optional[TreeNode]) -> None:
         if parent.left == child:
@@ -214,7 +211,34 @@ class TestBinarySearchTreeDelete(unittest.TestCase):
         self.assertIsNone(root.right.right.left.left)
 
     def test_remove_node_with_two_children_min_node_has_right_child(self):
-        raise NotImplementedError()
+        """
+                    100
+                        \
+                        200
+                        / \
+                    150    300
+                            / \
+                        250   400
+                        /
+                    225
+                        \
+                        237
+        """
+        root = TreeNode(value=100)
+        bst = BinarySearchTree(root)
+        bst.insert(TreeNode(value=200))
+        delete_value = 300
+        bst.insert(TreeNode(value=delete_value))
+        bst.insert(TreeNode(value=400))
+        bst.insert(TreeNode(value=150))
+        bst.insert(TreeNode(value=250))
+        bst.insert(TreeNode(value=225))
+        bst.insert(TreeNode(value=237))
+
+        bst.delete_by_value(delete_value)
+
+        self.assertEqual(root.right.right.value, 225)
+        self.assertEqual(root.right.right.left.left.value, 237)
 
 
 class TestBinarySearchTreeFindParentWithChildValue(unittest.TestCase):
