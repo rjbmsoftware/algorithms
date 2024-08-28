@@ -142,16 +142,80 @@ class BinarySearchTree:
         else:
             parent.right = replacement
 
+    def in_order_traversal_values(self) -> list:
+        """
+        Returns a list of values in ascending order
+
+        Complexity
+        Time:
+            0(n) as we visit every node in the tree
+        Space:
+            0(n) since we store each value and additional space
+            worst case for a lopsided tree being the height O(h)
+            best case is a balanced tree with h being the height
+            of the tree O(log n)
+        """
+        values = []
+        self._in_order_traversal(values, self._root)
+        return values
+
+    def _in_order_traversal(self, values: list, node: Optional[TreeNode]) -> None:
+        if node is None:
+            return
+
+        self._in_order_traversal(values, node.left)
+        values.append(node.value)
+        self._in_order_traversal(values, node.right)
+
 
 class TestBinarySearchTreeInOrderTraversalValues(unittest.TestCase):
 
     def test_empty_tree_empty_list(self):
-        # proposed solution
-        # recursive function
-        # add left subtree to list output
-        # add current node to list output
-        # add right subtree to list output
-        raise NotImplementedError()
+        bst = BinarySearchTree()
+
+        values = bst.in_order_traversal_values()
+
+        self.assertFalse(values)
+
+    def test_single_node_tree(self):
+        value = 1
+        bst = BinarySearchTree(TreeNode(value=value))
+
+        values = bst.in_order_traversal_values()
+
+        self.assertIsNotNone(values)
+        self.assertEqual(len(values), 1)
+        self.assertEqual(values[0], value)
+
+    def test_left_only_nodes(self):
+        input_values = [4, 3, 2, 1]
+        bst = BinarySearchTree()
+        for i in input_values:
+            bst.insert(TreeNode(value=i))
+        input_values.sort()
+
+        output_values = bst.in_order_traversal_values()
+        self.assertEqual(input_values, output_values)
+
+    def test_right_only_nodes(self):
+        input_values = [1, 2, 3, 4]
+        bst = BinarySearchTree()
+        for i in input_values:
+            bst.insert(TreeNode(value=i))
+
+        output_values = bst.in_order_traversal_values()
+
+        self.assertEqual(input_values, output_values)
+
+    def test_left_right_left_right(self):
+        input_values = [4, 2, 3, 1]
+        bst = BinarySearchTree()
+        for i in input_values:
+            bst.insert(TreeNode(value=i))
+        input_values.sort()
+
+        output_values = bst.in_order_traversal_values()
+        self.assertEqual(input_values, output_values)
 
 
 class TestBinarySearchTreeDelete(unittest.TestCase):
