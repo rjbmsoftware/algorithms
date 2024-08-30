@@ -167,6 +167,89 @@ class BinarySearchTree:
         values.append(node.value)
         self._in_order_traversal(values, node.right)
 
+    def pre_order_traversal_values(self) -> list:
+        """
+        Returns a list of values in pre-order traversal: root node first,
+        followed by left subtree values, then right subtree values.
+
+        Complexity
+        Time:
+            O(n) as we visit each node in the tree
+        Space:
+            0(n) since we store each value and additional space
+            worst case for a lopsided tree being the height O(h)
+            best case is a balanced tree with h being the height
+            of the tree O(log n)
+        """
+        values = []
+        self._pre_order_traversal_values(values, self._root)
+        return values
+
+    def _pre_order_traversal_values(self, values: list, node: Optional[TreeNode]) -> None:
+        if node is None:
+            return
+
+        values.append(node.value)
+        self._pre_order_traversal_values(values, node.left)
+        self._pre_order_traversal_values(values, node.right)
+
+
+class TestBinarySearchTreePreOrderTraversalValues(unittest.TestCase):
+
+    def test_empty_tree_empty_list(self):
+        bst = BinarySearchTree()
+
+        values = bst.pre_order_traversal_values()
+
+        self.assertFalse(values)
+
+    def test_single_node_tree(self):
+        value = 1
+        bst = BinarySearchTree(TreeNode(value=value))
+
+        values = bst.pre_order_traversal_values()
+
+        self.assertIsNotNone(values)
+        self.assertEqual(len(values), 1)
+        self.assertEqual(values[0], value)
+
+    def test_left_nodes_only(self):
+        input_values = [4, 3, 2, 1]
+        bst = BinarySearchTree()
+        for value in input_values:
+            bst.insert(TreeNode(value=value))
+
+        output_values = bst.pre_order_traversal_values()
+
+        self.assertEqual(input_values, output_values)
+
+    def test_right_nodes_only(self):
+        input_values = [1, 2, 3, 4]
+        bst = BinarySearchTree()
+        for value in input_values:
+            bst.insert(TreeNode(value=value))
+
+        output_values = bst.pre_order_traversal_values()
+
+        self.assertEqual(input_values, output_values)
+
+    def test_complex_example(self):
+        """
+                    64
+                   /  \
+                 32    128
+                /  \
+              16    48
+        """
+        input_values = [64, 32, 16, 48, 128]
+        bst = BinarySearchTree()
+        for value in input_values:
+            bst.insert(TreeNode(value=value))
+
+        output_values = bst.pre_order_traversal_values()
+
+        self.assertEqual(input_values, output_values)
+
 
 class TestBinarySearchTreeInOrderTraversalValues(unittest.TestCase):
 
