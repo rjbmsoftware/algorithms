@@ -201,7 +201,7 @@ class BinarySearchTree:
 
         Complexity
         Time:
-            O(n) as we vist each node in the tree
+            O(n) as we visit each node in the tree
         Space:
             0(n) since we store each value and additional space
             worst case for a lopsided tree being the height O(h)
