@@ -19,14 +19,12 @@ class AVLTree:
     def insert(self, node: HeightNode) -> None:
         if self._root is None:
             self._root = node
+            self._root.height = 1
             return
 
         self._insert(node, self._root)
-        node.height = self.node_height(node)
 
-    def _insert(self, node: HeightNode, parent_node: HeightNode):
-
-
+    def _insert(self, node: HeightNode, parent_node: HeightNode) -> None:
         if node.value <= parent_node.value:
             if parent_node.left is None:
                 parent_node.left = node
@@ -39,14 +37,31 @@ class AVLTree:
                 self._insert(node, parent_node.right)
 
         node.height = self.node_height(node)
+        parent_node.height = self.node_height(parent_node)
 
         # self.balance(parent_node)
 
-    def balance(self, node: HeightNode) -> None:
+    def balance_single_layer(self, node: HeightNode) -> None:
         """
         Applies the needed rotation to balance the subtree from the given node
+
+        Complexity
+            Time: O(1)
+            Space: O(1)
+
+        We only check the direct child heights and swap values if needed
         """
-        self._left_rotation(node)
+        left_height = node.left.height if node.left else 0
+        right_height = node.right.height if node.right else 0
+        balance_factor = right_height - left_height
+
+        if not balance_factor:
+            return
+
+        if balance_factor >= 1:
+            self._left_rotation(node)
+        else:
+            self._right_rotation(node)
 
     def _left_rotation(self, node: HeightNode):
         """
@@ -65,6 +80,25 @@ class AVLTree:
         node.right = node.right.right
 
         new_left_child.height = self.node_height(new_left_child)
+        node.height = self.node_height(node)
+
+    def _right_rotation(self, node: HeightNode):
+        """
+        Performs a right rotation
+
+        Pull the left node up and the parent becomes the right child
+        if the child has a right node that will become the new nodes
+        left child
+        """
+        if node.left is None:
+            return
+
+        new_right_child = HeightNode(node.left.right, node.right, node.value)
+        node.value = node.left.value
+        node.right = new_right_child
+        node.left = node.left.left
+
+        new_right_child.height = self.node_height(new_right_child)
         node.height = self.node_height(node)
 
     def node_height(self, node: Optional[HeightNode]) -> int:
@@ -128,7 +162,7 @@ class TestAVLTreeInsert(unittest.TestCase):
         root.right.right = HeightNode(value=256)
         root.right.right.height = 1
 
-        AVLTree().balance(root)
+        AVLTree().balance_single_layer(root)
 
         self.assertEqual(root.left.value, 64)
         self.assertEqual(root.left.height, 1)
@@ -137,6 +171,27 @@ class TestAVLTreeInsert(unittest.TestCase):
         self.assertEqual(root.height, 2)
 
         self.assertEqual(root.right.value, 256)
+        self.assertEqual(root.right.height, 1)
+
+    def test_right_rotation(self):
+        root = HeightNode(value=64)
+        root.height = 3
+
+        root.left = HeightNode(value=32)
+        root.left.height = 2
+
+        root.left.left = HeightNode(value=16)
+        root.left.left.height = 1
+
+        AVLTree().balance_single_layer(root)
+
+        self.assertEqual(root.left.value, 16)
+        self.assertEqual(root.left.height, 1)
+
+        self.assertEqual(root.value, 32)
+        self.assertEqual(root.height, 2)
+
+        self.assertEqual(root.right.value, 64)
         self.assertEqual(root.right.height, 1)
 
 
