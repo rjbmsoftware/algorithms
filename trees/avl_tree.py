@@ -39,7 +39,7 @@ class AVLTree:
         node.height = self.node_height(node)
         parent_node.height = self.node_height(parent_node)
 
-        # self.balance(parent_node)
+        self.balance_single_layer(parent_node)
 
     def balance_single_layer(self, node: HeightNode) -> None:
         """
@@ -55,10 +55,10 @@ class AVLTree:
         right_height = node.right.height if node.right else 0
         balance_factor = right_height - left_height
 
-        if not balance_factor:
+        if -1 <= balance_factor <= 1:
             return
 
-        if balance_factor >= 1:
+        if balance_factor > 1:
             self._left_rotation(node)
         else:
             self._right_rotation(node)
@@ -117,40 +117,52 @@ class AVLTree:
 class TestAVLTreeInsert(unittest.TestCase):
 
     def test_basic_bst_inserts(self):
-        root = HeightNode(value=64)
         avl_tree = AVLTree()
 
-        avl_tree.insert(root)
+        avl_tree.insert(HeightNode(value=64))
         avl_tree.insert(HeightNode(value=32))
         avl_tree.insert(HeightNode(value=128))
 
-        self.assertEqual(avl_tree.root.value, 64)
+        root = avl_tree.root
+        self.assertEqual(root.value, 64)
         self.assertEqual(root.left.value, 32)
         self.assertEqual(root.right.value, 128)
 
     def test_node_height_increases_as_right_children_increase(self):
-        root = HeightNode(value=64)
         avl_tree = AVLTree()
 
-        avl_tree.insert(root)
+        avl_tree.insert(HeightNode(value=64))
         avl_tree.insert(HeightNode(value=128))
-        avl_tree.insert(HeightNode(value=256))
 
-        self.assertEqual(root.height, 3)
-        self.assertEqual(root.right.height, 2)
-        self.assertEqual(root.right.right.height, 1)
+        root = avl_tree.root
+        self.assertEqual(root.height, 2)
+        self.assertEqual(root.right.height, 1)
 
     def test_node_height_increases_as_left_children_increase(self):
-        root = HeightNode(value=64)
         avl_tree = AVLTree()
-
-        avl_tree.insert(root)
         avl_tree.insert(HeightNode(value=32))
         avl_tree.insert(HeightNode(value=16))
 
-        self.assertEqual(root.height, 3)
-        self.assertEqual(root.left.height, 2)
-        self.assertEqual(root.left.left.height, 1)
+        root = avl_tree.root
+        self.assertEqual(root.height, 2)
+        self.assertEqual(root.left.height, 1)
+
+    def test_balance_on_insert(self):
+        avl_tree = AVLTree()
+
+        avl_tree.insert(HeightNode(value=64))
+        avl_tree.insert(HeightNode(value=32))
+        avl_tree.insert(HeightNode(value=16))
+
+        root = avl_tree.root
+        self.assertEqual(root.left.value, 16)
+        self.assertEqual(root.left.height, 1)
+
+        self.assertEqual(root.value, 32)
+        self.assertEqual(root.height, 2)
+
+        self.assertEqual(root.right.value, 64)
+        self.assertEqual(root.right.height, 1)
 
     def test_left_rotation(self):
         root = HeightNode(value=64)
