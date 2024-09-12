@@ -1,3 +1,4 @@
+from collections import deque
 from typing import Optional
 import unittest
 
@@ -62,6 +63,21 @@ class AVLTree:
             self._left_rotation(node)
         else:
             self._right_rotation(node)
+
+    def contains(self, value) -> bool:
+        # """
+
+        # """
+        node = self._root
+        while node:
+            if node.value == value:
+                return True
+            if value >= node.value:
+                node = node.right
+            else:
+                node = node.left
+
+        return False
 
     def _left_rotation(self, node: HeightNode):
         """
@@ -206,6 +222,60 @@ class TestAVLTreeInsert(unittest.TestCase):
         self.assertEqual(root.right.value, 64)
         self.assertEqual(root.right.height, 1)
 
+
+class TestAVLSearch(unittest.TestCase):
+
+    def test_search_empty_tree_is_none(self):
+        avl_tree = AVLTree()
+        contains_value = avl_tree.contains(1)
+        self.assertFalse(contains_value)
+
+    def test_search_value_is_root(self):
+        value = 10
+        avl_tree = AVLTree(HeightNode(value=value))
+        contains_value = avl_tree.contains(value)
+        self.assertTrue(contains_value)
+
+    def test_value_in_right_branch(self):
+        """
+                3
+             1     5
+           0   2 4   6
+        """
+        value = 6
+        avl_tree = AVLTree()
+        for i in range(7):
+            avl_tree.insert(HeightNode(value=i))
+
+        contains_value = avl_tree.contains(value)
+        self.assertTrue(contains_value)
+
+    def test_value_in_left_branch(self):
+        """
+                3
+             1     5
+           0   2 4   6
+        """
+        value = 0
+        avl_tree = AVLTree()
+        for i in range(7):
+            avl_tree.insert(HeightNode(value=i))
+
+        contains_value = avl_tree.contains(value)
+        self.assertTrue(contains_value)
+
+
+
+def print_tree(tree: AVLTree) -> None:
+    queue = deque()
+    queue.append(tree.root)
+    while queue:
+        node = queue.popleft()
+        print(node.value)
+        if node.left:
+            queue.append(node.left)
+        if node.right:
+            queue.append(node.right)
 
 if __name__ == "__main__":
     unittest.main()
