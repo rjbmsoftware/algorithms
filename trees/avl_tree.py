@@ -65,14 +65,21 @@ class AVLTree:
             self._right_rotation(node)
 
     def contains(self, value) -> bool:
-        # """
+        """
+        Finds the value in the AVL tree, True for the value exists
+        False otherwise
 
-        # """
+        Complexity
+            Time: O(log n) as the AVL is always balanced the worst case is a leaf node
+                  and the height of a balanced tree is log n where n is the amount of
+                  nodes
+            Space: O(1) constant time as this is in an iterative solution
+        """
         node = self._root
         while node:
             if node.value == value:
                 return True
-            if value >= node.value:
+            if value > node.value:
                 node = node.right
             else:
                 node = node.left
