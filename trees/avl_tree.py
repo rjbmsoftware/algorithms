@@ -136,6 +136,19 @@ class AVLTree:
             node.right.height if node.right else 0
         ) + 1
 
+    def delete(self, value) -> None:
+        if self._root is None:
+            return
+
+        # find parent with child that has value
+        # child without children can be removed
+        # child with single child swap values and remove child
+        # two children find
+        #   the min child in the right tree
+        #   swap removing the min node
+
+        # update height and re balance
+
 
 class TestAVLTreeInsert(unittest.TestCase):
 
@@ -272,6 +285,20 @@ class TestAVLSearch(unittest.TestCase):
         self.assertTrue(contains_value)
 
 
+class TestAVLDelete(unittest.TestCase):
+
+    def test_delete_value_from_empty_tree(self):
+        avl_tree = AVLTree()
+        avl_tree.delete(1)
+        self.assertIsNone(avl_tree.root)
+
+    def test_delete_value_from_single_value_tree(self):
+        value = 1
+        avl_tree = AVLTree(HeightNode(value=value))
+        avl_tree.delete(value)
+        self.assertIsNone(avl_tree.root)
+
+
 
 def print_tree(tree: AVLTree) -> None:
     queue = deque()
@@ -283,6 +310,7 @@ def print_tree(tree: AVLTree) -> None:
             queue.append(node.left)
         if node.right:
             queue.append(node.right)
+
 
 if __name__ == "__main__":
     unittest.main()
