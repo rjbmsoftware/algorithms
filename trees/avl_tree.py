@@ -137,17 +137,45 @@ class AVLTree:
         ) + 1
 
     def delete(self, value) -> None:
-        if self._root is None:
+        if self._root is None or self.contains(value) is False:
             return
 
-        # find parent with child that has value
-        # child without children can be removed
-        # child with single child swap values and remove child
-        # two children find
-        #   the min child in the right tree
-        #   swap removing the min node
+        self._delete(value, None, self._root)
 
-        # update height and re balance
+    def _delete(self, value, parent: Optional[HeightNode], node: Optional[HeightNode]) -> None:
+        if node is None:
+            return
+
+        if node.value == value:
+            # do the complex swap, child check, root check, height adjustment
+            self._remove(parent, node)
+        else:
+            child = node.left if node.value > value else node.right
+            self._delete(value, node, child)
+
+        # if parent:
+        #     parent.height = self.node_height(parent)
+        #     self.balance_single_layer(parent)
+        # self.balance_single_layer(node)
+
+    def _remove(self, parent: Optional[HeightNode], node: HeightNode) -> None:
+        node_is_childless = node.left is None and node.right is None
+        if node_is_childless:
+            if parent is not None:
+                if parent.left == node:
+                    parent.left = None
+                else:
+                    parent.right = None
+            else:
+                self._root = None
+            return
+
+        node_has_left_child_only = node.left and node.right is None
+        if node_has_left_child_only:
+            pass
+        # node has right child only
+        # node has two children
+
 
 
 class TestAVLTreeInsert(unittest.TestCase):
@@ -298,6 +326,11 @@ class TestAVLDelete(unittest.TestCase):
         avl_tree.delete(value)
         self.assertIsNone(avl_tree.root)
 
+    def test_delete_value_from_right_node(self):
+        value = 1
+        avl_tree = AVLTree(HeightNode(value=value))
+        avl_tree.delete(value)
+        self.assertIsNone(avl_tree.root)
 
 
 def print_tree(tree: AVLTree) -> None:
