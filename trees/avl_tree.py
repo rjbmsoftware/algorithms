@@ -172,8 +172,19 @@ class AVLTree:
 
         node_has_left_child_only = node.left and node.right is None
         if node_has_left_child_only:
-            pass
+            return
         # node has right child only
+
+        node_has_right_child_only = node.left is None and node.right
+        if node_has_right_child_only:
+            if parent:
+                parent.value = node.value
+                parent.right = None
+                parent.height = self.node_height(parent)
+            else:
+                self._root = self._root.right
+                self._root.height = self.node_height(self._root)
+
         # node has two children
 
 
@@ -326,11 +337,16 @@ class TestAVLDelete(unittest.TestCase):
         avl_tree.delete(value)
         self.assertIsNone(avl_tree.root)
 
-    def test_delete_value_from_right_node(self):
-        value = 1
-        avl_tree = AVLTree(HeightNode(value=value))
-        avl_tree.delete(value)
-        self.assertIsNone(avl_tree.root)
+    def test_delete_root_value_with_right_node(self):
+        value_one = 1
+        value_two = 2
+        avl_tree = AVLTree(HeightNode(value=value_one))
+        avl_tree.insert(HeightNode(value=value_two))
+
+        avl_tree.delete(value_one)
+
+        self.assertEqual(avl_tree.root.value, value_two)
+        self.assertEqual(avl_tree.root.height, 1)
 
 
 def print_tree(tree: AVLTree) -> None:
