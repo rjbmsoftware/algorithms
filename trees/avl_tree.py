@@ -179,6 +179,7 @@ class AVLTree:
             else:
                 self._root = self._root.left
                 self._root.height = self.node_height(self._root)
+            return
 
         node_has_right_child_only = node.left is None and node.right
         if node_has_right_child_only:
@@ -189,10 +190,22 @@ class AVLTree:
             else:
                 self._root = self._root.right
                 self._root.height = self.node_height(self._root)
+            return
 
-        # node has two children
-        # find the sub tree minimum and swap them out
+        node_has_two_children = node.left and node.right
+        if node_has_two_children:
+            minimum_value = self.min_value(node.right)
+            self.delete(minimum_value)
+            node.value = minimum_value
 
+    def min_value(self, node: HeightNode) -> any:
+        if node is None:
+            raise ValueError('node must have a value')
+
+        while node.left:
+            node = node.left
+
+        return node.value
 
 
 class TestAVLTreeInsert(unittest.TestCase):
@@ -376,6 +389,17 @@ class TestAVLDelete(unittest.TestCase):
         avl_tree.delete(32)
 
         self.assertEqual(avl_tree.root.value, value_three)
+
+    def test_find_min_value_subtree(self):
+        minimum = 0
+        avl_tree = AVLTree()
+        for i in range(minimum, 7):
+            avl_tree.insert(HeightNode(value=i))
+
+        minimum_actual = avl_tree.min_value(avl_tree.root)
+
+        self.assertEqual(minimum, minimum_actual)
+
 
 
 def print_tree(tree: AVLTree) -> None:
