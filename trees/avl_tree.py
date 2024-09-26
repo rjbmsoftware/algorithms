@@ -400,6 +400,23 @@ class TestAVLDelete(unittest.TestCase):
 
         self.assertEqual(minimum, minimum_actual)
 
+    def test_height_updated(self):
+        """
+                3
+               / \
+              1   5
+             / \\ / \
+            0  2  4 6
+        """
+        minimum = 0
+        avl_tree = AVLTree()
+        for i in range(minimum, 7):
+            avl_tree.insert(HeightNode(value=i))
+
+        avl_tree.delete(0)
+        avl_tree.delete(2)
+
+        self.assertEqual(avl_tree.root.left.height, 0)
 
 
 def print_tree(tree: AVLTree) -> None:
