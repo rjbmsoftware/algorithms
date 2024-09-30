@@ -149,13 +149,17 @@ class AVLTree:
         if node.value == value:
             # do the complex swap, child check, root check, height adjustment
             self._remove(parent, node)
+
+            if parent:
+                parent.height = self.node_height(parent)
+                # self.balance_single_layer(parent)
         else:
             child = node.left if node.value > value else node.right
             self._delete(value, node, child)
 
-        # if parent:
-        #     parent.height = self.node_height(parent)
-        #     self.balance_single_layer(parent)
+        if parent:
+            # parent.height = self.node_height(parent)
+            self.balance_single_layer(parent)
         # self.balance_single_layer(node)
 
     def _remove(self, parent: Optional[HeightNode], node: HeightNode) -> None:
@@ -416,7 +420,7 @@ class TestAVLDelete(unittest.TestCase):
         avl_tree.delete(0)
         avl_tree.delete(2)
 
-        self.assertEqual(avl_tree.root.left.height, 0)
+        self.assertEqual(avl_tree.root.left.height, 1)
 
 
 def print_tree(tree: AVLTree) -> None:
