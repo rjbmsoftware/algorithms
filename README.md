@@ -22,7 +22,7 @@ A place for me to learn about algorithms and data structures
         - [x] Breadth first search
         - [x] Depth first search
     - [x] Binary search tree
-    - [ ] AVL tree
+    - [x] AVL tree
     - [ ] Red-black tree
     - [ ] Trie (prefix tree)
     - [ ] Abstract syntax tree
