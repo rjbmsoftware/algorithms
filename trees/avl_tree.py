@@ -147,20 +147,16 @@ class AVLTree:
             return
 
         if node.value == value:
-            # do the complex swap, child check, root check, height adjustment
             self._remove(parent, node)
 
             if parent:
                 parent.height = self.node_height(parent)
-                # self.balance_single_layer(parent)
         else:
             child = node.left if node.value > value else node.right
             self._delete(value, node, child)
 
         if parent:
-            # parent.height = self.node_height(parent)
             self.balance_single_layer(parent)
-        # self.balance_single_layer(node)
 
     def _remove(self, parent: Optional[HeightNode], node: HeightNode) -> None:
         node_is_childless = node.left is None and node.right is None
