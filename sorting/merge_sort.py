@@ -1,6 +1,9 @@
 import unittest
 
-def merge_sort(input) -> list:
+from sort_utils import is_sorted
+
+
+def merge_sort(values) -> list:
     """
     top down merge sort implementation
 
@@ -12,19 +15,19 @@ def merge_sort(input) -> list:
 
     1. repeatedly split the array into single value lists
     2. merge split lists by comparing the leading values
-    
+
     after all the lists are merged the list is sorted
     """
-    if len(input) <= 1:
-        return input
-    
-    left_half_of_input = input[:len(input) // 2]
-    right_half_of_input = input[len(input) // 2:]
+    if len(values) <= 1:
+        return values
+
+    left_half_of_input = values[:len(values) // 2]
+    right_half_of_input = values[len(values) // 2:]
     return merge_lists(
         merge_sort(left_half_of_input),
         merge_sort(right_half_of_input)
     )
- 
+
 
 def merge_lists(left_list: list, right_list: list) -> list:
     """
@@ -48,8 +51,9 @@ def merge_lists(left_list: list, right_list: list) -> list:
         else:
             merged_list.append(right_list[right_index])
             right_index += 1
-    
+
     return merged_list
+
 
 class MergeSortTest(unittest.TestCase):
 
@@ -73,44 +77,25 @@ class MergeSortTest(unittest.TestCase):
         output = merge_lists([1], [])
         self.assertEqual(output, [1])
 
-
-    def is_sorted(self, input: list) -> bool:
-        """
-        returns if the list is sorted
-        """
-        if len(input) <= 1:
-            return True
-        
-        i = 0
-        max_index = len(input) -1
-        while i < max_index:
-            if input[i] > input[i + 1]:
-                return False
-            
-            i += 1
-
-        return True
-            
-
     def test_max_to_min(self):
-        input = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
-        output = merge_sort(input)
-        self.assertTrue(self.is_sorted(output))
+        values = [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]
+        output = merge_sort(values)
+        self.assertTrue(is_sorted(output))
 
     def test_empty_is_sorted(self):
-        input = []
-        output = merge_sort(input)
-        self.assertTrue(self.is_sorted(output))
-        
+        values = []
+        output = merge_sort(values)
+        self.assertTrue(is_sorted(output))
+
     def test_already_sorted(self):
-        input = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-        output = merge_sort(input)
-        self.assertTrue(self.is_sorted(output))
+        values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        output = merge_sort(values)
+        self.assertTrue(is_sorted(output))
 
     def test_same(self):
-        input = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-        output = merge_sort(input)
-        self.assertTrue(self.is_sorted(output))
+        values = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+        output = merge_sort(values)
+        self.assertTrue(is_sorted(output))
 
 
 if __name__ == '__main__':
