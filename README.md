@@ -8,7 +8,7 @@ A place for me to learn about algorithms and data structures
     - [x] Bubble sort
     - [x] Merge sort
     - [x] Insertion sort
-    - [ ] Selection sort
+    - [x] Selection sort
     - [ ] Heap sort
     - [ ] Counting sort
     - [ ] Radix sort
