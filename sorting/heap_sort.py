@@ -20,25 +20,45 @@ def max_heapify(values: list, parent_index: int) -> None:
     Swaps the values of parent_index and children to ensure the parent is of greater value than the
     direct children
     """
+    parent_outside_list_bounds = 0 < parent_index > len(values) - 1
+    if parent_outside_list_bounds:
+        return
+
     # off by one to allow for zero based lists
     left_child_index = parent_index * 2 + 1
     right_child_index = parent_index * 2 + 2
 
-    if values[left_child_index] > values[right_child_index]:
+    if left_child_index < len(values) and right_child_index < len(values):
+        if values[left_child_index] > values[right_child_index]:
+            largest_child_index = left_child_index
+        else:
+            largest_child_index = right_child_index
+    elif left_child_index < len(values):
         largest_child_index = left_child_index
-    else:
+    elif right_child_index < len(values):
         largest_child_index = right_child_index
+    else:
+        return  # leaf
 
     if values[parent_index] < values[largest_child_index]:
         values[parent_index], values[largest_child_index] = values[largest_child_index], values[parent_index]
+        max_heapify(values, largest_child_index)
 
 
 def build_max_heap(values: list) -> None:
-    pass
+    for i in range(len(values) // 2 - 1, -1, -1):
+        max_heapify(values, i)
 
 
 class HeapSortTest(unittest.TestCase):
     pass
+
+
+class BuildMaxHeapTest(unittest.TestCase):
+    def test_sifting_down(self):
+        values = [1, 2, 3, 4, 5, 6]
+        build_max_heap(values)
+        self.assertEqual(values, [6, 5, 3, 4, 2, 1])
 
 
 class MaxHeapifyTest(unittest.TestCase):
@@ -73,11 +93,21 @@ class MaxHeapifyTest(unittest.TestCase):
         max_heapify(values, 1)
         self.assertEqual(values, [1, 5, 3, 4, 2])
 
+    def test_parent_invalid_index(self):
+        values = [1, 2, 3]
+        max_heapify(values, 99)
+        self.assertEqual(values, [1, 2, 3])
+
     def test_left_child_invalid_index(self):
-        pass
+        values = [1, 2, 3]
+        max_heapify(values, 2)
+        self.assertEqual(values, [1, 2, 3])
 
     def test_right_child_invalid_index(self):
-        pass
+        values = [1, 2, 3, 4]
+        max_heapify(values, 1)
+        self.assertEqual(values, [1, 4, 3, 2])
+
 
 
 if __name__ == "__main__":
