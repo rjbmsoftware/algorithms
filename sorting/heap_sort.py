@@ -1,3 +1,4 @@
+from typing import Optional
 import unittest
 
 from sort_utils import is_sorted
@@ -13,8 +14,8 @@ def heap_sort(values: list) -> None:
         element at position zero to the end, calling max heapify to sift the lowest value down so
         the heap is valid which log n time so O(n log n)
 
-        space: O(log n) where n is the number of elements in the list as it is a recursive
-        implementation, max heapify recurses down the list tree, the amount of layers is log n
+        space: O(1) iterative implementation does not hold on to any extra data or causes a
+        recursive call stack.
     """
 
     build_max_heap(values)
@@ -24,30 +25,32 @@ def heap_sort(values: list) -> None:
         max_heapify(values, 0, i - 1)
 
 
-def max_heapify(values: list, parent_index: int, end_index=None) -> None:
+def max_heapify(values: list, parent_index: int, end_index: Optional[int] = None) -> None:
     """
     Swaps the values of parent_index and children to ensure the parent is of greater value than the
     direct children
     """
-
-    # off by one to allow for zero based lists
-    left_child_index = parent_index * 2 + 1
-    right_child_index = left_child_index + 1
 
     largest = parent_index
 
     if end_index is None:
         end_index = len(values) - 1
 
-    if left_child_index <= end_index and values[left_child_index] > values[largest]:
-        largest = left_child_index
+    while True:
+        left_child_index = parent_index * 2 + 1
+        right_child_index = left_child_index + 1
 
-    if right_child_index <= end_index and values[right_child_index] > values[largest]:
-        largest = right_child_index
+        if left_child_index <= end_index and values[left_child_index] > values[largest]:
+            largest = left_child_index
 
-    if largest != parent_index:
-        values[parent_index], values[largest] = values[largest], values[parent_index]
-        max_heapify(values, largest, end_index)
+        if right_child_index <= end_index and values[right_child_index] > values[largest]:
+            largest = right_child_index
+
+        if largest != parent_index:
+            values[parent_index], values[largest] = values[largest], values[parent_index]
+            parent_index = largest
+        else:
+            break
 
 
 def build_max_heap(values: list) -> None:

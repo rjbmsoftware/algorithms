@@ -9,7 +9,7 @@ A place for me to learn about algorithms and data structures
     - [x] Merge sort
     - [x] Insertion sort
     - [x] Selection sort
-    - [ ] Heap sort
+    - [x] Heap sort
     - [ ] Counting sort
     - [ ] Radix sort
     - [ ] Bucket sort
