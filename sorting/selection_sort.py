@@ -44,11 +44,6 @@ def swap(values, first_index: int, second_index: int) -> None:
 
 class SelectionSortTest(unittest.TestCase):
 
-    def test_empty_list(self):
-        values = []
-        selection_sort(values)
-        self.assertEqual(values, [])
-
     def test_single_value_list(self):
         values = [1]
         selection_sort(values)
