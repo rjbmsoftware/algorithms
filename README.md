@@ -10,7 +10,7 @@ A place for me to learn about algorithms and data structures
     - [x] Insertion sort
     - [x] Selection sort
     - [x] Heap sort
-    - [ ] Counting sort
+    - [x] Counting sort
     - [ ] Radix sort
     - [ ] Bucket sort
 - [ ] Searching
