@@ -1,5 +1,7 @@
 import unittest
 
+from sort_utils import is_sorted
+
 
 def radix_sort(values: list[int]) -> list[int]:
     """
@@ -26,18 +28,25 @@ def counting_sort(values: list[int], power: int) -> list[int]:
     value_to_digit_value = {}
     for value in values:
         digit = value
-        for _ in range(power):
-            digit %= 10
+        for _ in range(power - 1):
+            digit //= 10
+
+        digit %= 10
         value_to_digit_value[value] = digit
 
-    range_list = [0] * max(value_to_digit_value.values())
+    range_list = [0] * (max(value_to_digit_value.values()) + 1)
 
+    # count the frequency of each value into range list
     for value in values:
         range_list[value_to_digit_value[value]] += 1
 
+    # calculate the starting index of the next value by adding the value to the left
+    for i in range(1, len(range_list) - 1):
+        range_list[i + 1] += range_list[i]
+
     # shift range_list values along one by one so the next value knows which index to start
-    for i in range(len(range_list) - 2, 0, -1):
-        range_list[i] = range_list[-1]
+    for i in range(len(range_list) - 1, 0, -1):
+        range_list[i] = range_list[i - 1]
 
     range_list[0] = 0
     output_list = [0] * len(values)
@@ -45,6 +54,7 @@ def counting_sort(values: list[int], power: int) -> list[int]:
     for value in values:
         index = range_list[value_to_digit_value[value]]
         output_list[index] = value
+        range_list[value_to_digit_value[value]] += 1
 
     return output_list
 
@@ -59,6 +69,20 @@ class CountingSortTest(unittest.TestCase):
         values = [99, 98, 97, 96, 95, 94, 93, 92, 91]
         output_values = counting_sort(values, 2)
         self.assertEqual(values, output_values)
+
+    def test_units_sorted(self):
+        values = [9, 8, 7, 6, 5, 4, 3, 2, 1]
+        output_values = counting_sort(values, 1)
+        self.assertEqual(output_values, [1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+    def test_descending_tens_ascending_units(self):
+        values = [91, 82, 73, 64, 55, 46, 37, 28, 19]
+        output_values = counting_sort(values, 2)
+        self.assertEqual(len(values), len(output_values))
+        self.assertTrue(is_sorted(output_values))
+
+    def test_integers_max_to_min_power_of_ten_less(self):
+        pass
 
 
 if __name__ == '__main__':
