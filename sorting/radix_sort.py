@@ -15,6 +15,12 @@ def radix_sort(values: list[int]) -> list[int]:
 
         space:
     """
+    passes = len(str(max(values)))
+    output_list = values[:]
+    for i in range(passes, 0, -1):
+        output_list = counting_sort(output_list, i)
+
+    return output_list
 
 
 def counting_sort(values: list[int], power: int) -> list[int]:
@@ -28,10 +34,13 @@ def counting_sort(values: list[int], power: int) -> list[int]:
     value_to_digit_value = {}
     for value in values:
         digit = value
-        for _ in range(power - 1):
-            digit //= 10
+        if digit >= 10 ** (power - 1):
+            for _ in range(power - 1):
+                digit //= 10
 
-        digit %= 10
+            digit %= 10
+        else:
+            digit = 0
         value_to_digit_value[value] = digit
 
     range_list = [0] * (max(value_to_digit_value.values()) + 1)
@@ -41,7 +50,7 @@ def counting_sort(values: list[int], power: int) -> list[int]:
         range_list[value_to_digit_value[value]] += 1
 
     # calculate the starting index of the next value by adding the value to the left
-    for i in range(1, len(range_list) - 1):
+    for i in range(len(range_list) - 1):
         range_list[i + 1] += range_list[i]
 
     # shift range_list values along one by one so the next value knows which index to start
@@ -60,7 +69,11 @@ def counting_sort(values: list[int], power: int) -> list[int]:
 
 
 class RadixSortTest(unittest.TestCase):
-    pass
+
+    def test_reverse(self):
+        values = [1234, 123, 12, 1]
+        output_values = radix_sort(values)
+        self.assertEqual(output_values, [1, 12, 123, 1234])
 
 
 class CountingSortTest(unittest.TestCase):
@@ -82,7 +95,14 @@ class CountingSortTest(unittest.TestCase):
         self.assertTrue(is_sorted(output_values))
 
     def test_integers_max_to_min_power_of_ten_less(self):
-        pass
+        values = [40, 4, 30, 3, 20, 2, 10, 1]
+        output_values = counting_sort(values, 2)
+        self.assertEqual(output_values, [4, 3, 2, 1, 10, 20, 30, 40])
+
+    def test_handle_zero_values(self):
+        values = [1000, 100, 10, 0, 0, 0]
+        output_values = counting_sort(values, 1)
+        self.assertEqual(values, output_values)
 
 
 if __name__ == '__main__':
