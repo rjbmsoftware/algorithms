@@ -12,9 +12,19 @@ def radix_sort(values: list[int]) -> list[int]:
 
     complexity
         time:
+            O(d * (n + k)) since we are using counting sort with n + k, n being the amount of
+            elements and k being the count of distinct values to count frequencies applied d times
+            with d representing the number of digits in the largest element.
 
         space:
+            O(n + k) for counting sort where n is the amount of elements and k being the count of
+            distinct elements, my solution does build a dictionary to map the element value to a
+            power of 10 required value making it O(2n + k) which can then be simplified.
     """
+    already_sorted = len(values) <= 1
+    if already_sorted:
+        return values
+
     passes = len(str(max(values)))
     output_list = values[:]
     for i in range(passes, 0, -1):
@@ -74,6 +84,15 @@ class RadixSortTest(unittest.TestCase):
         values = [1234, 123, 12, 1]
         output_values = radix_sort(values)
         self.assertEqual(output_values, [1, 12, 123, 1234])
+
+    def test_empty_is_sorted(self):
+        output_values = radix_sort([])
+        self.assertEqual(output_values, [])
+
+    def test_single_is_sorted(self):
+        values = [1]
+        output_values = radix_sort(values)
+        self.assertEqual(output_values, values)
 
 
 class CountingSortTest(unittest.TestCase):

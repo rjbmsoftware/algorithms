@@ -11,7 +11,7 @@ A place for me to learn about algorithms and data structures
     - [x] Selection sort
     - [x] Heap sort
     - [x] Counting sort
-    - [ ] Radix sort
+    - [x] Radix sort
     - [ ] Bucket sort
 - [ ] Searching
     - [x] Binary search
