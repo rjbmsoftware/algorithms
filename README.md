@@ -3,7 +3,7 @@ A place for me to learn about algorithms and data structures
 
 ## TODO
 
-- [ ] Sorting
+- [x] Sorting
     - [x] Quick sort
     - [x] Bubble sort
     - [x] Merge sort
@@ -12,7 +12,7 @@ A place for me to learn about algorithms and data structures
     - [x] Heap sort
     - [x] Counting sort
     - [x] Radix sort
-    - [ ] Bucket sort
+    - [x] Bucket sort
 - [ ] Searching
     - [x] Binary search
     - [ ] Linear search
