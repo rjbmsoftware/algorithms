@@ -15,7 +15,7 @@ A place for me to learn about algorithms and data structures
     - [x] Bucket sort
 - [ ] Searching
     - [x] Binary search
-    - [ ] Linear search
+    - [x] Linear search
     - [ ] Exponential search
 - [ ] Trees
     - [x] Traversal
