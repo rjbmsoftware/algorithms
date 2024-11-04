@@ -4,6 +4,22 @@ import unittest
 T = TypeVar('T')
 
 
+def ranged_binary_search(values: list[T], value: T, start_index: int, end_index: int) -> int | None:
+    while start_index <= end_index:
+        working_index = (end_index - start_index) // 2 + start_index
+
+        value_found = values[working_index] == value
+        if value_found:
+            return working_index
+
+        if values[working_index] < value:
+            start_index = working_index + 1
+        else:
+            end_index = working_index - 1
+
+    return None
+
+
 def exponential_search(values: list[T], value: T) -> int | None:
     """
     Searches the values for value returning the index in the list of the found value otherwise None,
@@ -29,18 +45,17 @@ def exponential_search(values: list[T], value: T) -> int | None:
         value_found = values[start_index] == value
         if value_found:
             return start_index
-        
-        if values[end_index] < value:
-            start_index = end_index
-            end_index *= 2
 
+        value_may_exist_within_range = values[start_index] <= value <= values[end_index]
+        if value_may_exist_within_range:
+            return ranged_binary_search(values, value, start_index, end_index)
 
-    return None
-
+        start_index = end_index
+        end_index *= 2
 
 
 class ExponentialSearchTest(unittest.TestCase):
-    
+
     def test_contains_value(self):
         values = [1, 2, 3, 4, 5]
         value = 3
