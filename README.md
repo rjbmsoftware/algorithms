@@ -13,10 +13,10 @@ A place for me to learn about algorithms and data structures
     - [x] Counting sort
     - [x] Radix sort
     - [x] Bucket sort
-- [ ] Searching
+- [x] Searching
     - [x] Binary search
     - [x] Linear search
-    - [ ] Exponential search
+    - [x] Exponential search
 - [ ] Trees
     - [x] Traversal
         - [x] Breadth first search
