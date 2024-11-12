@@ -10,34 +10,42 @@ class Colour(StrEnum):
 class ColourNode:
 
     def __init__(self, value, colour, left_node, right_node):
-        self.value = value
-        self.colour: Colour = colour
-        self.left_node = left_node
-        self.right_node = right_node
+        self._value = value
+        self._colour: Colour = colour
+        self._left_node = left_node
+        self._right_node = right_node
 
     @property
     def colour(self):
-        return self.colour
+        return self._colour
 
     @colour.setter
     def colour(self, colour: Colour):
-        self.colour = colour
+        self._colour = colour
 
     @property
     def value(self) -> Colour:
-        return self.value
+        return self._value
 
     @value.setter
     def value(self, value):
-        self.value = value
+        self._value = value
 
     @property
     def left(self):
-        return self.left
+        return self._left_node
 
     @left.setter
     def left(self, new_left):
-        self.left = new_left
+        self._left_node = new_left
+
+    @property
+    def right(self):
+        return self._right_node
+
+    @right.setter
+    def right(self, new_right):
+        self._right_node = new_right
 
 
 class RedBlackTree:
@@ -57,6 +65,10 @@ class RedBlackTree:
     def root(self) -> ColourNode:
         return self._root
 
+    @root.setter
+    def root(self, node: ColourNode) -> None:
+        self._root = node
+
     def insert(self, value) -> None:
         """
         Rules
@@ -75,6 +87,7 @@ class TestRedBlackTree(unittest.TestCase):
         tree = RedBlackTree()
         tree.insert(10)
         self.assertEqual(tree.root.colour, Colour.BLACK)
+
 
 if __name__ == "__main__":
     unittest.main()
