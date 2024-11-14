@@ -1,3 +1,4 @@
+from typing import Self
 import unittest
 from enum import StrEnum, auto
 
@@ -9,11 +10,11 @@ class Colour(StrEnum):
 
 class ColourNode:
 
-    def __init__(self, value, colour, left_node, right_node):
+    def __init__(self, value, colour, left_node: Self | None = None, right_node: Self | None = None):
         self._value = value
         self._colour: Colour = colour
-        self._left_node = left_node
-        self._right_node = right_node
+        self._left_node: ColourNode = left_node
+        self._right_node: ColourNode = right_node
 
     @property
     def colour(self):
@@ -32,7 +33,7 @@ class ColourNode:
         self._value = value
 
     @property
-    def left(self):
+    def left(self) -> Self | None:
         return self._left_node
 
     @left.setter
@@ -40,7 +41,7 @@ class ColourNode:
         self._left_node = new_left
 
     @property
-    def right(self):
+    def right(self) -> Self | None:
         return self._right_node
 
     @right.setter
@@ -72,10 +73,29 @@ class RedBlackTree:
     def insert(self, value) -> None:
         """
         Rules
-         1. if tree is empty create new node as root node with the colour black
+         1. if tree is empty create new black node as the root node
+         2. if tree is not empty create a new red leaf node
         """
         if self.root is None:
-            self.root = ColourNode(value, Colour.BLACK, None, None)
+            self.root = ColourNode(value, Colour.BLACK)
+            return
+
+        new_node = ColourNode(value, Colour.RED)
+        working_node = self.root
+
+        while working_node:
+            if working_node.value >= value:
+                if working_node.left is None:
+                    working_node.left = new_node
+                    break
+
+                working_node = working_node.left
+            else:
+                if working_node.right is None:
+                    working_node.right = new_node
+                    break
+
+                working_node = working_node.right
 
     def delete(self, value) -> None:
         pass
@@ -87,6 +107,18 @@ class TestRedBlackTree(unittest.TestCase):
         tree = RedBlackTree()
         tree.insert(10)
         self.assertEqual(tree.root.colour, Colour.BLACK)
+
+    def test_insert_second_node_red(self):
+        tree = RedBlackTree()
+
+        child_value = 18
+        tree.insert(10)
+        tree.insert(child_value)
+
+        root = tree.root
+        self.assertEqual(root.colour, Colour.BLACK)
+        self.assertEqual(root.right.colour, Colour.RED)
+        self.assertEqual(root.right.value, child_value)
 
 
 if __name__ == "__main__":
