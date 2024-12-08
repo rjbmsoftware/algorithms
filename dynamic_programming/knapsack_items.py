@@ -33,6 +33,25 @@ def knapsack_grid(items: list[tuple[int, int]], total_capacity) -> list[list[int
     return items_by_capacities
 
 
+def knapsack_which_items(items: list[tuple[int, int]], total_capacity, matrix:list[list[int]]) -> list[tuple[int, int]]:
+    
+    taken_items = []
+    for i in range(total_capacity, 0, -1):
+        
+     
+    return taken_items
+
+
+class KnapSackItemsTest(unittest.TestCase):
+
+    def test_no_items_included_empty_list(self):
+        items = [(9, 15), (7, 40)]
+        capacity = 6
+        matrix = knapsack_grid(items, capacity)
+        taken_items = knapsack_which_items(items, capacity, matrix)
+        self.assertFalse(taken_items)
+
+
 class KnapsackGridTest(unittest.TestCase):
 
     def test_all_items_fit(self):
