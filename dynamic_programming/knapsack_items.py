@@ -54,15 +54,19 @@ def knapsack_which_items(items: list[tuple[int, int]], matrix:list[list[int]]) -
             being they all fit in the knapsack
     """
     taken_items = []
+    remaining_value = matrix[-1][-1]
     for i in range(len(items) - 1, -1, -1):
-        weight = items[i][0]
+        weight, value = items[i]
         item_fits_in_knapsack = weight < len(matrix[0])
         if item_fits_in_knapsack:
-            old_value = matrix[i][weight -1]
-            new_value = matrix[i + 1][weight +1]
+            old_value = matrix[i][weight]
+            new_value = matrix[i + 1][weight]
             item_packed = old_value != new_value
             if item_packed:
                 taken_items.append(items[i])
+                remaining_value -= value
+                if remaining_value <= 0:
+                    break
 
     taken_items.reverse()
     return taken_items
