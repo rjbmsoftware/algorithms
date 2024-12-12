@@ -10,6 +10,8 @@ def knapsack_unbound(weights, values, capacity):
         time:
         space:
     """
+    for i in range(len(weights)):
+        pass
 
 
 class KnapsackUnboundTest(unittest.main):
