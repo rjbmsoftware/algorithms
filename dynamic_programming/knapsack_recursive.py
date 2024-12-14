@@ -1,16 +1,26 @@
 import unittest
 
+weight_value_cache: dict[int, int] = {}
+
 def knapsack(items, capacity):
-    if capacity or not items:
+    if capacity <= 0 or not items:
         return 0
 
     weight, value = items[0]
+    items = items[1:]
 
+    if weight_value_cache.get(weight, 0) < value:
+        weight_value_cache[weight] = value
+
+    with_item_value = 0
     if weight <= capacity:
-        capacity -= weight
-        return value + knapsack(items[1:], capacity)
-    
-    
+        with_item_value = value
+
+    return max(
+        with_item_value + knapsack(items, capacity - weight),
+        knapsack(items, capacity)
+    )
+
 
 class KnapsackTest(unittest.TestCase):
     def test_all_items_fit(self):
