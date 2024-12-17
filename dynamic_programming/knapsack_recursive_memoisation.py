@@ -3,12 +3,28 @@ import unittest
 
 def knapsack(weights: list[int], values: list[int], capacity: int,
              weight_value_cache: list[list[int]], index: int):
-    return 1
+    if index < 0:
+        return 0
+
+    if weight_value_cache[index][capacity] != -1:
+        return weight_value_cache[index][capacity]
+
+    if weights[index] > capacity:
+        weight_value_cache[index][capacity] = knapsack(
+            weights, values, capacity, weight_value_cache, index - 1)
+    else:
+        weight_value_cache[index][capacity] = max(
+            knapsack(weights, values, capacity, weight_value_cache, index - 1),
+            values[index] + knapsack(weights, values,
+                                     capacity - weights[index], weight_value_cache, index - 1),
+        )
+
+    return weight_value_cache[index][capacity]
 
 
 def knapsack_cache(values: list[tuple[int, int]], capacity: int) -> list[list[int]]:
     capacity += 1
-    return [[0] * capacity for _ in range(len(values))]
+    return [[-1] * capacity for _ in range(len(values))]
 
 
 class KnapsackTest(unittest.TestCase):
