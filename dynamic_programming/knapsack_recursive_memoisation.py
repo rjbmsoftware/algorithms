@@ -3,6 +3,16 @@ import unittest
 
 def knapsack(weights: list[int], values: list[int], capacity: int,
              weight_value_cache: list[list[int]], index: int):
+    """
+    Recursive memoised solution
+
+    complexity
+        time:
+            0(n * m) as the cache of values is filled
+        space:
+            0(n * m + n) where n is the amount of items and m the capacity for the cached
+            values and an additional n for the maximum height of recursive call stack
+    """
     if index < 0:
         return 0
 
