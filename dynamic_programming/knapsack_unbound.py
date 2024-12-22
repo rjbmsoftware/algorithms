@@ -9,7 +9,12 @@ def knapsack_unbound(weights: list[int], values: list[int], capacity: int) -> in
 
     complexity:
         time:
+            O(n * m) time taken to populate the cache which is a worst case
+            of n being the amount of items by m the capacity
         space:
+            O(n * m) space used is the size of the cache which in this implementation
+            is defined upfront, we could also add the recursive depth of knapsack cache
+            filler which could be the capacity over minimum item weight
     """
     cache_capacity = capacity + 1
     value_cache = [[-1] * cache_capacity for _ in weights]
@@ -33,13 +38,15 @@ def knapsack_cache_filler(weights, values, capacity, cache, index):
 
     knapsack_cache_filler(weights, values, capacity,
                           cache, index - 1)  # Skip item
-    if weights[index] <= capacity:
+
+    weight = weights[index]
+    if weight <= capacity:
         knapsack_cache_filler(weights, values, capacity -
-                              weights[index], cache, index)  # Take item
+                              weight, cache, index)  # Take item
 
     skip_value = cache[index - 1][capacity] if index > 0 else 0
     take_value = values[index] + cache[index][capacity -
-                                              weights[index]] if weights[index] <= capacity else 0
+                                              weight] if weight <= capacity else 0
 
     cache[index][capacity] = max(skip_value, take_value)
 
