@@ -37,7 +37,7 @@ A place for me to learn about algorithms and data structures
     - [ ] Topological sort
 - [ ] Dynamic programming
     - [x] Fibonacci sequence
-    - [ ] Knapsack problem
+    - [x] Knapsack problem
     - [ ] Longest common subsequence
     - [ ] Matrix chain multiplication
     - [ ] Coin change problem
