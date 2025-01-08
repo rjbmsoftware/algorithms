@@ -40,7 +40,7 @@ A place for me to learn about algorithms and data structures
     - [x] Knapsack problem
     - [ ] Longest common subsequence
     - [ ] Matrix chain multiplication
-    - [ ] Coin change problem
+    - [x] Coin change problem
     - [ ] Edit distance (minimum operations to convert one string to another)
 - [ ] Greedy
     - [ ] Huffman coding
