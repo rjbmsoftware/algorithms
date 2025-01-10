@@ -14,9 +14,9 @@ class Graph:
         self.adjacency_matrix[u][v] = weight
         self.adjacency_matrix[v][u] = weight
 
-    def add_vertex_data(self, vertex: int, data: list[int]) -> None:
+    def add_vertex_data(self, vertex: int, name: str) -> None:
         if 0 <= vertex < self.size:
-            self.vertex_data[vertex] = data
+            self.vertex_data[vertex] = name
 
 def shortest_path():
     """
@@ -25,7 +25,12 @@ def shortest_path():
 
 
 class ShortestPathTest(unittest.TestCase):
-    pass
+
+    def test_single_route(self):
+        graph = Graph(1)
+        graph.add_vertex_data(0, 'A')
+        graph.add_vertex_data(1, 'B')
+        graph.add_edge(0, 1, 10)
 
 
 if __name__ == '__main__':
