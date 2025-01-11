@@ -18,10 +18,14 @@ class Graph:
         if 0 <= vertex < self.size:
             self.vertex_data[vertex] = name
 
-def shortest_path():
-    """
-    Implementation of Dijkstra's shortest path algorithm
-    """
+    def shortest_path(self, start_vertex):
+        """
+        Implementation of Dijkstra's shortest path algorithm
+        """
+        distances = [float('inf')] * self.size
+        start_vertex_index = self.vertex_data.index(start_vertex)
+        distances[start_vertex_index] = 0
+        visited = [False] * self.size
 
 
 class ShortestPathTest(unittest.TestCase):
