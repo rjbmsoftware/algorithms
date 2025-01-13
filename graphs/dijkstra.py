@@ -21,6 +21,24 @@ class Graph:
     def shortest_distance(self, start_vertex_name: str) -> list[float]:
         """
         Implementation of Dijkstra's shortest path algorithm
+
+        steps
+            create an adjacency matrix add relevant weights to the edges
+            create a list of distances set to infinite and the starting point to zero
+            create a list of vertex visited status set to false
+            loop over the individual lists in the adjacency matrix finding the minimum distance
+            break if unreachable
+            loop over the individual lists in the adjacency matrix if not visited and not the
+            starting vertex compare the distances saving the minimum
+
+            output is a list of minimum distance to the respective vertex
+
+            Complexity:
+                time: O(n squared) where n is amount of vertices as the worst case there will be an
+                edge from each vertex to all other vertices which will have to visited and checked.
+
+                space: O(n squared) where n is the amount of vertices as the adjacency matrix will
+                need to record edges from each vertex to all other vertices.
         """
         distances = [float('inf')] * self.size
         start_vertex_index = self.vertex_names.index(start_vertex_name)
@@ -60,6 +78,21 @@ class ShortestPathTest(unittest.TestCase):
         distances = graph.shortest_distance('A')
         self.assertEqual(distances[0], 0)
         self.assertEqual(distances[1], 10)
+
+    def test_diamond(self):
+        graph = Graph(4)
+        graph.set_vertex_name(0, 'A')
+        graph.set_vertex_name(1, 'B')
+        graph.set_vertex_name(2, 'C')
+        graph.set_vertex_name(3, 'D')
+
+        graph.add_edge(0, 1, 1)
+        graph.add_edge(0, 2, 3)
+        graph.add_edge(1, 3, 1)
+        graph.add_edge(2, 3, 1)
+
+        distances = graph.shortest_distance('A')
+        self.assertEqual(distances[3], 2)
 
 
 if __name__ == '__main__':
